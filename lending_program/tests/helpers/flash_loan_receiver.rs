@@ -2,16 +2,7 @@ use solana_program::{
     account_info::AccountInfo, entrypoint, entrypoint::ProgramResult, msg, pubkey::Pubkey,
 };
 
-#[derive(Error, Debug, Copy, Clone)]
-pub enum FlashLoanReceiverError {
-    /// Invalid instruction
-    #[error("Invalid Instruction")]
-    InvalidInstruction,
-    #[error("The account is not currently owned by the program")]
-    IncorrectProgramId,
-}
-
-use FlashLoanReceiverError::InvalidInstruction;
+use crate::helpers::flash_loan_receiver::FlashLoanReceiverError::InvalidInstruction;
 use spl_token::{
     solana_program::{
         account_info::next_account_info, program::invoke_signed, program_error::ProgramError,
@@ -137,6 +128,15 @@ impl FlashLoanReceiverInstruction {
             .ok_or(InvalidInstruction)?;
         Ok(amount)
     }
+}
+
+#[derive(Error, Debug, Copy, Clone)]
+pub enum FlashLoanReceiverError {
+    /// Invalid instruction
+    #[error("Invalid Instruction")]
+    InvalidInstruction,
+    #[error("The account is not currently owned by the program")]
+    IncorrectProgramId,
 }
 
 impl From<FlashLoanReceiverError> for ProgramError {

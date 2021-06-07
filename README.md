@@ -11,4 +11,4 @@ A Python bot for liquidation of unhealthy obligations in [Solaris protocol](http
 3. Liquidation program gets some `liquidity_amount` from a lending program via flashloan and repays a loan. Then if it returns flashloan + `flashloan_fees` and takes a liquidation reward. If `balance_before < balance_after` it return `Ok()`, if now throws an error and reverts the transaction. 
 
 #### [Liquidation Bot](https://github.com/solaris-protocol/solaris-liquidation-bot/tree/master/bot)
-#### [Liquidation Program](https://github.com/solaris-protocol/solaris-liquidation-bot/tree/master/program)
+#### [Liquidation Program](https://github.com/solaris-protocol/solaris-liquidation-bot/tree/master/liquidation_program)
