@@ -42,8 +42,6 @@ host_fee_receiver_publickey = PublicKey(hostFeeReceiverPubkey)
 flash_loan_fee_receiver_mint_publickey = PublicKey(flashLoanFeeReceiverMintPubkey)
 
 class LiquidBot:
-    __url = 'https://api.devnet.solana.com'
-
     """ This is LiquidBot Class """
     def __init__(self, url: str, payer_keypair: list, threaded=True):
         self.__payer = Account(payer_keypair[:32])
@@ -75,9 +73,7 @@ class LiquidBot:
 
         return json.loads(responce.text).get('result')
 
-    def get_unhealthy_obligations(self):
-        unhealthy_obligations = []
-
+    def check_and_liquidate_unhealthy_obligations(self):
         for obligation in self.get_obligaions():
             data = obligation.get('account').get('data')
             if type(data) == list and len(data) > 0:
@@ -93,8 +89,6 @@ class LiquidBot:
 
             if borrowed_value >= unhealthy_borrow_value:
                 self.__liquidate_obligation(borrowed_value)
-
-        return unhealthy_obligations
 
     def __create_destination_liquidity(self) -> PublicKey:
         token = Token(self.__client, pubkey=flash_loan_fee_receiver_mint_publickey,
