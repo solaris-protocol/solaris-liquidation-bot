@@ -102,12 +102,12 @@ txn.add(
             AccountMeta(pubkey=source_liquidity_publickey, is_signer=False, is_writable=True),
             AccountMeta(pubkey=destination_liquidity_publickey, is_signer=False, is_writable=True),
             AccountMeta(pubkey=reserve_publickey, is_signer=False, is_writable=True),
-            AccountMeta(pubkey=flash_loan_fee_receiver_publickey, is_signer=False, is_writable=True),
-            AccountMeta(pubkey=host_fee_receiver_publickey, is_signer=False, is_writable=True),
             AccountMeta(pubkey=lending_market_publickey, is_signer=False, is_writable=False),
             AccountMeta(pubkey=lending_market_derived_authority_publickey, is_signer=False, is_writable=False),
-            AccountMeta(pubkey=TOKEN_PROGRAM_ID, is_signer=False, is_writable=False),
             AccountMeta(pubkey=flash_loan_program_id, is_signer=False, is_writable=False),
+            AccountMeta(pubkey=flash_loan_fee_receiver_publickey, is_signer=False, is_writable=True),
+            AccountMeta(pubkey=host_fee_receiver_publickey, is_signer=False, is_writable=True),
+            AccountMeta(pubkey=TOKEN_PROGRAM_ID, is_signer=False, is_writable=False)
         ],
         program_id=token_lending_program_pubkey,
         data=data
