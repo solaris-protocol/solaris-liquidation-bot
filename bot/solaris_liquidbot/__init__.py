@@ -44,6 +44,7 @@ flash_loan_fee_receiver_mint_publickey = PublicKey(flashLoanFeeReceiverMintPubke
 class LiquidBot:
     """ This is LiquidBot Class """
     def __init__(self, url: str, payer_keypair: list, threaded=True):
+        self.__url = url
         self.__payer = Account(payer_keypair[:32])
         self.__client = Client(url)
         self.threaded = threaded
