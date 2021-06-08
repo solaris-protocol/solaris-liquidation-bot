@@ -19,6 +19,10 @@ use spl_token::{
     },
     state::Account,
 };
+use lending_program:: {
+	state::Obligation
+};
+
 use std::cmp::min;
 use std::convert::TryInto;
 use thiserror::Error;

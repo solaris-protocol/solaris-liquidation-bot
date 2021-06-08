@@ -5,7 +5,7 @@ version = "0.1.0"
 [dependencies]
 solana-program = "1.6.9"
 thiserror = "1.0.24"
-spl-token-lending = { path="../lending-program", features = [ "no-entrypoint" ] }
+lending-program = { path="./lending-program", features = [ "no-entrypoint" ] }
 spl-token = {version = "3.1.1", features = ["no-entrypoint"]}
 arrayref = "0.3.6"
 
