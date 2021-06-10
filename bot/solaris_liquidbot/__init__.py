@@ -27,6 +27,7 @@ lendingMarketDerivedAuthorityPubkey = '4B3rs3z48eW1iw3JNTrQZsTJnCqEbFMuGVk3TVMAt
 flashLoanFeeReceiverPubkey = 'ESApvknZkcGwee2rhjL7yGKyabtdCvDJ28US8VhsWutw'
 flashLoanFeeReceiverMintPubkey = 'So11111111111111111111111111111111111111112'
 hostFeeReceiverPubkey = '6oLtsmgq3kMTJs11eM4rpdcQjyMAXw84VvTUAi2XHnqu'
+flash_loan_program_derived_authority = 'CQUV8znxqS1td7QZVywf2g5pmwGgUjh8WWKoNsHBPiuF'
 
 flash_loan_program_id = PublicKey('2HrfwEiotfbaAKqSiqscZcc1BnLNhDY8NfeyKVHC9y6p')
 token_lending_program_pubkey = PublicKey(TOKEN_LENDING_PROGRAM_ID)
@@ -131,7 +132,8 @@ class LiquidBot:
                     AccountMeta(pubkey=flash_loan_program_id, is_signer=False, is_writable=False),
                     AccountMeta(pubkey=flash_loan_fee_receiver_publickey, is_signer=False, is_writable=True),
                     AccountMeta(pubkey=host_fee_receiver_publickey, is_signer=False, is_writable=True),
-                    AccountMeta(pubkey=TOKEN_PROGRAM_ID, is_signer=False, is_writable=False)
+                    AccountMeta(pubkey=TOKEN_PROGRAM_ID, is_signer=False, is_writable=False),
+                    AccountMeta(pubkey=flash_loan_program_derived_authority_publickey, is_signer=False, is_writable=False)
                 ],
                 program_id=token_lending_program_pubkey,
                 data=data
