@@ -20,28 +20,19 @@ OBLIGATION_LAYOUT_LEN = 916
 TOKEN_LENDING_PROGRAM_ID = '6h5geweHee42FbxZrYAcYJ8SGVAjG6sGow5dtzcKtrJw'
 
 
-sourceLiquidityPubkey = 'C7PhDXuS9H6a5GfdUrEsakmVWokXRv6jfbRDiAPpVEtE'
-reservePubkey = 'Bfs6BTc2t6Epb9hjGpLpQcSmQ1ZycKsEv6mV3QuV3VzZ'
-lendingMarketPubkey = '9cu7LXZYJ6oNNi7X4anv2LP8NP58h8zKiE61LMcgJt5h'
-lendingMarketDerivedAuthorityPubkey = '4B3rs3z48eW1iw3JNTrQZsTJnCqEbFMuGVk3TVMAtQeM'
-flashLoanFeeReceiverPubkey = 'ESApvknZkcGwee2rhjL7yGKyabtdCvDJ28US8VhsWutw'
-flashLoanFeeReceiverMintPubkey = 'So11111111111111111111111111111111111111112'
-hostFeeReceiverPubkey = '6oLtsmgq3kMTJs11eM4rpdcQjyMAXw84VvTUAi2XHnqu'
-flash_loan_program_derived_authority = 'CQUV8znxqS1td7QZVywf2g5pmwGgUjh8WWKoNsHBPiuF'
+source_liquidity_publickey = PublicKey('C7PhDXuS9H6a5GfdUrEsakmVWokXRv6jfbRDiAPpVEtE')
+reserve_publickey = PublicKey('Bfs6BTc2t6Epb9hjGpLpQcSmQ1ZycKsEv6mV3QuV3VzZ')
+lending_market_publickey = PublicKey('9cu7LXZYJ6oNNi7X4anv2LP8NP58h8zKiE61LMcgJt5h')
+lending_market_derived_authority_publickey = PublicKey('4B3rs3z48eW1iw3JNTrQZsTJnCqEbFMuGVk3TVMAtQeM')
+flash_loan_fee_receiver_publickey = PublicKey('ESApvknZkcGwee2rhjL7yGKyabtdCvDJ28US8VhsWutw')
+flash_loan_fee_receiver_mint_publickey = PublicKey('So11111111111111111111111111111111111111112')
+host_fee_receiver_publickey = PublicKey('6oLtsmgq3kMTJs11eM4rpdcQjyMAXw84VvTUAi2XHnqu')
+flash_loan_program_derived_authority_publickey = PublicKey('CQUV8znxqS1td7QZVywf2g5pmwGgUjh8WWKoNsHBPiuF')
 
 flash_loan_program_id = PublicKey('2HrfwEiotfbaAKqSiqscZcc1BnLNhDY8NfeyKVHC9y6p')
 token_lending_program_pubkey = PublicKey(TOKEN_LENDING_PROGRAM_ID)
 
 derive_authority_publickey = PublicKey('CQUV8znxqS1td7QZVywf2g5pmwGgUjh8WWKoNsHBPiuF')
-
-source_liquidity_publickey = PublicKey(sourceLiquidityPubkey)
-reserve_publickey = PublicKey(reservePubkey)
-lending_market_publickey = PublicKey(lendingMarketPubkey)
-lending_market_derived_authority_publickey = PublicKey(lendingMarketDerivedAuthorityPubkey)
-flash_loan_fee_receiver_publickey = PublicKey(flashLoanFeeReceiverPubkey)
-host_fee_receiver_publickey = PublicKey(hostFeeReceiverPubkey)
-flash_loan_fee_receiver_mint_publickey = PublicKey(flashLoanFeeReceiverMintPubkey)
-flash_loan_program_derived_authority_publickey = PublicKey(flash_loan_program_derived_authority)
 
 class LiquidBot:
     """ This is LiquidBot Class """
