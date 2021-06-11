@@ -78,7 +78,7 @@ class LiquidBot:
     def check_and_liquidate_unhealthy_obligations(self):
         for obligation in self.get_obligaions():
             data = obligation.get('account').get('data')
-            if type(data) == list and len(data) > 0:
+            if isinstance(data, list) and len(data) > 0:
                 data = data[0]
 
             data = base64.b64decode(data)
@@ -92,29 +92,15 @@ class LiquidBot:
             if borrowed_value >= unhealthy_borrow_value:
                 self.__liquidate_obligation(borrowed_value)
 
-    def __create_destination_liquidity(self) -> PublicKey:
-        token = Token(self.__client, pubkey=flash_loan_fee_receiver_mint_publickey,
-            program_id=TOKEN_PROGRAM_ID,
-            payer=self.__payer
-        )
-
-        token_account_publickey = token.create_account(
-            owner=self.__payer.public_key()
-        )
-
-        rpc_response = token.set_authority(
-            account=token_account_publickey,
-            current_authority=self.__payer.public_key(),
-            authority_type=AuthorityType.ACCOUNT_OWNER,
-            new_authority=derive_authority_publickey
-        )
-        # print(f'rpc_response: {rpc_response}')
-
-        return token_account_publickey
-
     def __liquidate_obligation(self, amount: int):
-
-        destination_liquidity_publickey = self.__create_destination_liquidity()
+        # create destination liquidity
+        destination_liquidity_publickey = Token.create_wrapped_native_account(
+            self.__client,
+            program_id=TOKEN_PROGRAM_ID,
+            owner=derive_authority_publickey,
+            payer=self.__payer,
+            amount=100000
+        )
 
         # amount = 1 * 10 ** 2       # 100
         tag = 13
