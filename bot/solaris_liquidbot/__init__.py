@@ -41,6 +41,7 @@ lending_market_derived_authority_publickey = PublicKey(lendingMarketDerivedAutho
 flash_loan_fee_receiver_publickey = PublicKey(flashLoanFeeReceiverPubkey)
 host_fee_receiver_publickey = PublicKey(hostFeeReceiverPubkey)
 flash_loan_fee_receiver_mint_publickey = PublicKey(flashLoanFeeReceiverMintPubkey)
+flash_loan_program_derived_authority_publickey = PublicKey(flash_loan_program_derived_authority)
 
 class LiquidBot:
     """ This is LiquidBot Class """
