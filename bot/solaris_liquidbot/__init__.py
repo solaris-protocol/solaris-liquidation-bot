@@ -14,7 +14,7 @@ from spl.token.constants import TOKEN_PROGRAM_ID
 from spl.token.instructions import AuthorityType
 
 PUBLIC_KEY_LAYOUT = Bytes(32)
-DECIMAL = Array(3, Int64ub)
+DECIMAL = Bytes(16)
 
 OBLIGATION_LAYOUT_LEN = 916
 
@@ -67,6 +67,9 @@ class LiquidBot:
         return json.loads(responce.text).get('result')
 
     def __deserialize_obligation(self, data: bytes) -> Struct:
+        """
+        data: decoded from base64 bytes
+        """
         last_update_format = Struct(
             "slot" / Int64ub,
             "stale" / Int8ub,
@@ -77,19 +80,16 @@ class LiquidBot:
             "last_update" / last_update_format,
             "lending_market" / PUBLIC_KEY_LAYOUT,
             "owner" / PUBLIC_KEY_LAYOUT,
-            "deposited_value" / Int16ub,
-            "borrowed_value" / Int16ub,
-            "allowed_borrow_value" / Int16ub,
-            "unhealthy_borrow_value" / Int16ub,
+            "deposited_value" / Bytes(16),
+            "borrowed_value" / Bytes(16),
+            "allowed_borrow_value" / Bytes(16),
+            "unhealthy_borrow_value" / Bytes(16),
             "deposits_len" / Int8ub,
             "borrows_len" / Int8ub
             # "data_flat" /
         )
 
-        obligation_container = format.parse(data)
-        print(obligation_container)
-
-        return obligation_container
+        return format.parse(data)
 
     def check_and_liquidate_unhealthy_obligations(self):
         for obligation in self.get_obligaions():
@@ -101,11 +101,8 @@ class LiquidBot:
 
             obligation_container = self.__deserialize_obligation(data)
             
-            borrowed_data = data[1 + 8 + 1 + 32 + 32 + 16:][:16]
-            borrowed_value = int.from_bytes(borrowed_data, "little") # amount
-
-            unhealthy_borrow_data = data[1 + 8 + 1 + 32 + 32 + 16 + 16 + 16:][:16]
-            unhealthy_borrow_value = int.from_bytes(unhealthy_borrow_data, "little")
+            borrowed_value = int.from_bytes(obligation_container.borrowed_value, "little") # amount
+            unhealthy_borrow_value = int.from_bytes(obligation_container.unhealthy_borrow_value, "little")
 
             print(f'obligation pubkey: {obligation.get("pubkey")}')
             print(f'borrowed_value: {borrowed_value}, unhealthy_borrow_value: {unhealthy_borrow_value}, diff: {borrowed_value - unhealthy_borrow_value}')
@@ -114,6 +111,7 @@ class LiquidBot:
                 continue
 
             if borrowed_value >= unhealthy_borrow_value:
+                # print(obligation_container)
                 self.__liquidate_obligation(borrowed_value)
 
     def __liquidate_obligation(self, amount: int):
