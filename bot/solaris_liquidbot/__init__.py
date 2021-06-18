@@ -1,4 +1,4 @@
-from construct import Int8ub, Int64ub, Struct, Array, Byte, Bytes, Container
+from construct import Int8ub, Int16ub, Int64ub, Struct, Array, Byte, Bytes, Container
 import requests
 import json
 import base64
@@ -66,6 +66,31 @@ class LiquidBot:
 
         return json.loads(responce.text).get('result')
 
+    def __deserialize_obligation(self, data: bytes) -> Struct:
+        last_update_format = Struct(
+            "slot" / Int64ub,
+            "stale" / Int8ub,
+        )
+
+        format = Struct(
+            "version" / Int8ub,
+            "last_update" / last_update_format,
+            "lending_market" / PUBLIC_KEY_LAYOUT,
+            "owner" / PUBLIC_KEY_LAYOUT,
+            "deposited_value" / Int16ub,
+            "borrowed_value" / Int16ub,
+            "allowed_borrow_value" / Int16ub,
+            "unhealthy_borrow_value" / Int16ub,
+            "deposits_len" / Int8ub,
+            "borrows_len" / Int8ub
+            # "data_flat" /
+        )
+
+        obligation_container = format.parse(data)
+        print(obligation_container)
+
+        return obligation_container
+
     def check_and_liquidate_unhealthy_obligations(self):
         for obligation in self.get_obligaions():
             data = obligation.get('account').get('data')
@@ -73,6 +98,8 @@ class LiquidBot:
                 data = data[0]
 
             data = base64.b64decode(data)
+
+            obligation_container = self.__deserialize_obligation(data)
             
             borrowed_data = data[1 + 8 + 1 + 32 + 32 + 16:][:16]
             borrowed_value = int.from_bytes(borrowed_data, "little") # amount
@@ -80,7 +107,7 @@ class LiquidBot:
             unhealthy_borrow_data = data[1 + 8 + 1 + 32 + 32 + 16 + 16 + 16:][:16]
             unhealthy_borrow_value = int.from_bytes(unhealthy_borrow_data, "little")
 
-            print(f'obligation pubkey: {obligation.get('pubkey')}')
+            print(f'obligation pubkey: {obligation.get("pubkey")}')
             print(f'borrowed_value: {borrowed_value}, unhealthy_borrow_value: {unhealthy_borrow_value}, diff: {borrowed_value - unhealthy_borrow_value}')
 
             if borrowed_value == 0 and unhealthy_borrow_value == 0:
