@@ -17,7 +17,6 @@ PUBLIC_KEY_LAYOUT = Bytes(32)
 DECIMAL = Array(3, Int64ub)
 
 OBLIGATION_LAYOUT_LEN = 916
-TOKEN_LENDING_PROGRAM_ID = '6h5geweHee42FbxZrYAcYJ8SGVAjG6sGow5dtzcKtrJw'
 
 
 source_liquidity_publickey = PublicKey('C7PhDXuS9H6a5GfdUrEsakmVWokXRv6jfbRDiAPpVEtE')
@@ -30,16 +29,16 @@ host_fee_receiver_publickey = PublicKey('6oLtsmgq3kMTJs11eM4rpdcQjyMAXw84VvTUAi2
 flash_loan_program_derived_authority_publickey = PublicKey('CQUV8znxqS1td7QZVywf2g5pmwGgUjh8WWKoNsHBPiuF')
 
 flash_loan_program_id = PublicKey('2HrfwEiotfbaAKqSiqscZcc1BnLNhDY8NfeyKVHC9y6p')
-token_lending_program_pubkey = PublicKey(TOKEN_LENDING_PROGRAM_ID)
 
 derive_authority_publickey = PublicKey('CQUV8znxqS1td7QZVywf2g5pmwGgUjh8WWKoNsHBPiuF')
 
 class LiquidBot:
     """ This is LiquidBot Class """
-    def __init__(self, url: str, payer_keypair: list, threaded=True):
+    def __init__(self, url: str, payer_keypair: list, token_lending_program_address: str, threaded=True):
         self.__url = url
         self.__payer = Account(payer_keypair[:32])
         self.__client = Client(url)
+        self.__token_lending_program_pubkey = PublicKey(token_lending_program_address)
         self.threaded = threaded
 
     def get_obligaions(self) -> dict:
@@ -49,7 +48,7 @@ class LiquidBot:
             "id": 1,
             "method": "getProgramAccounts",
             "params": [
-                TOKEN_LENDING_PROGRAM_ID,
+                str(self.__token_lending_program_pubkey),
                 {
                     "encoding": "jsonParsed",
                     "filters": [
@@ -80,6 +79,12 @@ class LiquidBot:
 
             unhealthy_borrow_data = data[1 + 8 + 1 + 32 + 32 + 16 + 16 + 16:][:16]
             unhealthy_borrow_value = int.from_bytes(unhealthy_borrow_data, "little")
+
+            print(f'obligation pubkey: {obligation.get('pubkey')}')
+            print(f'borrowed_value: {borrowed_value}, unhealthy_borrow_value: {unhealthy_borrow_value}, diff: {borrowed_value - unhealthy_borrow_value}')
+
+            if borrowed_value == 0 and unhealthy_borrow_value == 0:
+                continue
 
             if borrowed_value >= unhealthy_borrow_value:
                 self.__liquidate_obligation(borrowed_value)
@@ -113,7 +118,7 @@ class LiquidBot:
                     AccountMeta(pubkey=TOKEN_PROGRAM_ID, is_signer=False, is_writable=False),
                     AccountMeta(pubkey=flash_loan_program_derived_authority_publickey, is_signer=False, is_writable=False)
                 ],
-                program_id=token_lending_program_pubkey,
+                program_id=self.__token_lending_program_pubkey,
                 data=data
             )
         )
